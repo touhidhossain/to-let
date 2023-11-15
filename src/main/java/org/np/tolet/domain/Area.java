@@ -1,9 +1,10 @@
 package org.np.tolet.domain;
 
+import java.util.Objects;
+
 public class Area {
     private int id;
     private String name;
-    private int divisionId;
 
     public Area() {
     }
@@ -11,7 +12,6 @@ public class Area {
     public Area(int id, String name, int divisionId) {
         this.id = id;
         this.name = name;
-        this.divisionId = divisionId;
     }
 
     public int getId() {
@@ -30,11 +30,16 @@ public class Area {
         this.name = name;
     }
 
-    public int getDivisionId() {
-        return divisionId;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Area area = (Area) o;
+        return Objects.equals(name, area.name);
     }
 
-    public void setDivisionId(int divisionId) {
-        this.divisionId = divisionId;
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

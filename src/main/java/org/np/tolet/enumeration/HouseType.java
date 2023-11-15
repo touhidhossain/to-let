@@ -1,5 +1,5 @@
 package org.np.tolet.enumeration;
 
 public enum HouseType {
-    FULL, FLAT, SUBLET, SIT
+    FULL, FLAT, SUBLET, SEAT
 }

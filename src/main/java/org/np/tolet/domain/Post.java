@@ -4,8 +4,9 @@ import org.np.tolet.enumeration.HouseType;
 import org.np.tolet.enumeration.TenantType;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
-public class Post {
+public class Post implements Comparable<Post> {
     private long id;
     private String description;
 
@@ -17,21 +18,24 @@ public class Post {
 
     private User postedBy;
 
+    private String contactNumber;
+
     private boolean isEnabled;
 
-    private LocalDateTime addDateTime;
+    private String addDateTime;
 
 
     public Post() {
     }
 
-    public Post(long id, String description, Area area, HouseType houseType, TenantType tenantType, User postedBy, boolean isEnabled, LocalDateTime addDateTime) {
+    public Post(long id, String description, Area area, HouseType houseType, TenantType tenantType, User postedBy, String contactNumber, boolean isEnabled, String addDateTime) {
         this.id = id;
         this.description = description;
         this.area = area;
         this.houseType = houseType;
         this.tenantType = tenantType;
         this.postedBy = postedBy;
+        this.contactNumber = contactNumber;
         this.isEnabled = isEnabled;
         this.addDateTime = addDateTime;
     }
@@ -84,6 +88,14 @@ public class Post {
         this.postedBy = postedBy;
     }
 
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
     public boolean isEnabled() {
         return isEnabled;
     }
@@ -92,11 +104,29 @@ public class Post {
         isEnabled = enabled;
     }
 
-    public LocalDateTime getAddDateTime() {
+    public String getAddDateTime() {
         return addDateTime;
     }
 
-    public void setAddDateTime(LocalDateTime addDateTime) {
+    public void setAddDateTime(String addDateTime) {
         this.addDateTime = addDateTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Post post = (Post) o;
+        return id == post.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public int compareTo(Post o) {
+        return (int) (this.id - o.getId());
     }
 }
