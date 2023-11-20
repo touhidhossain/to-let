@@ -40,6 +40,7 @@ public class PostServiceImpl implements PostService {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+        System.out.println("Please select an area");
         for (Area area : areaSet) {
             System.out.println("For (" + area.getName() + ") input (" + area.getId() + ")");
             areaMap.put(area.getId(), area);
