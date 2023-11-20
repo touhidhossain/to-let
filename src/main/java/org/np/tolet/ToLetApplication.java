@@ -21,38 +21,36 @@ public class ToLetApplication {
 
     public static void main(String[] args) {
 
+        String welcomeMessage = """
+                Welcome to np ToLet
+                """;
+        System.out.print(welcomeMessage);
+        System.out.print("Input (L) for Login and (R) for Registration: ");
+        String userInput = scanner.nextLine();
 
-        while (true) {
-            String welcomeMessage = """
-                    Welcome to np ToLet
-                    """;
-            System.out.print(welcomeMessage);
-            System.out.print("Input (L) for Login and (R) for Registration: ");
-            String userInput = scanner.nextLine();
-
-            switch (userInput) {
-                case "L", "l" -> {
-                    try {
-                        User user = userService.login(scanner);
-                        System.out.println("Welcome " + user.getFullName());
-                        if (user.getRole().equals(Role.HOUSE_OWNER)) {
-                            houseOwnersActivity(user);
-                        } else {
-                            tenantActivity();
-                        }
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
+        switch (userInput) {
+            case "L", "l" -> {
+                try {
+                    User user = userService.login(scanner);
+                    System.out.println("Welcome " + user.getFullName());
+                    if (user.getRole().equals(Role.HOUSE_OWNER)) {
+                        houseOwnersActivity(user);
+                    } else {
+                        tenantActivity();
                     }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
-                case "R", "r" -> {
-                    try {
-                        userService.registration(scanner);
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                    }
+            }
+            case "R", "r" -> {
+                try {
+                    userService.registration(scanner);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
             }
         }
+
     }
 
     private static void houseOwnersActivity(User user) {
@@ -61,41 +59,50 @@ public class ToLetApplication {
                 For new post input (N).
                 Please input your choice:
                 """;
-        System.out.print(houseOwnerMessage);
-        String userChoice = scanner.nextLine();
-        switch (userChoice) {
-            case "P" -> {
-                try {
-                    TreeSet<Post> usersPost = postService.getAllPostByUser(user.getUserName());
-                    NavigableSet<Post> descendingSet = usersPost.descendingSet();
-                    for (Post post : descendingSet) {
-                        printPost(post);
-                    }
-                    if (!descendingSet.isEmpty()) {
-                        System.out.print("Input post id to delete a post: ");
-                        try {
-                            long postId = scanner.nextLong();
-                            scanner.nextLine();
-                            for (Post post : usersPost) {
-                                if (post.getId() == postId) {
-                                    postService.deletePost(post);
+        while (true) {
+            System.out.print(houseOwnerMessage);
+            String userChoice = scanner.nextLine();
+            switch (userChoice) {
+                case "P", "p" -> {
+                    try {
+                        TreeSet<Post> usersPost = postService.getAllPostByUser(user.getUserName());
+                        NavigableSet<Post> descendingSet = usersPost.descendingSet();
+                        for (Post post : descendingSet) {
+                            printPost(post);
+                        }
+                        if (!descendingSet.isEmpty()) {
+                            System.out.print("Input post id to delete a post: ");
+                            try {
+                                String postIdAsString = scanner.nextLine();
+                                long postId = Integer.parseInt(postIdAsString);
+                                Post postToBeDeleted = null;
+                                for (Post post : usersPost) {
+                                    if (post.getId() == postId) {
+                                        postToBeDeleted = post;
+                                        break;
+                                    }
+                                }
+
+                                if (postToBeDeleted != null) {
+                                    postService.deletePost(postToBeDeleted);
                                 } else {
                                     System.out.println("Invalid post id!");
                                 }
-                            }
-                        } catch (NumberFormatException nfe) {
 
+                            } catch (NumberFormatException nfe) {
+                                System.out.println("Invalid Input!");
+                            }
                         }
+                    } catch (IOException e) {
+                        System.out.println(e.getMessage());
                     }
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
                 }
-            }
-            case "N" -> {
-                try {
-                    postService.createPost(scanner, user);
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
+                case "N", "n" -> {
+                    try {
+                        postService.createPost(scanner, user);
+                    } catch (IOException e) {
+                        System.out.println(e.getMessage());
+                    }
                 }
             }
         }
@@ -111,22 +118,24 @@ public class ToLetApplication {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-        for (Area area : areaSet) {
-            System.out.println("For (" + area.getName() + ") input (" + area.getId() + ")");
-        }
-        System.out.print("Please input a code: ");
-        int areaCode = scanner.nextInt();
-        scanner.nextLine();
-
-        TreeSet<Post> usersPost = null;
-        try {
-            usersPost = postService.getAllPostByArea(areaCode);
-            NavigableSet<Post> descendingSet = usersPost.descendingSet();
-            for (Post post : descendingSet) {
-                printPost(post);
+        while (true) {
+            for (Area area : areaSet) {
+                System.out.println("For (" + area.getName() + ") input (" + area.getId() + ")");
             }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.out.print("Please input an area code: ");
+            int areaCode = scanner.nextInt();
+            scanner.nextLine();
+
+            TreeSet<Post> usersPost = null;
+            try {
+                usersPost = postService.getAllPostByArea(areaCode);
+                NavigableSet<Post> descendingSet = usersPost.descendingSet();
+                for (Post post : descendingSet) {
+                    printPost(post);
+                }
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
         }
 
     }

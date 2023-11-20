@@ -112,8 +112,7 @@ public class PostServiceImpl implements PostService {
         Files.deleteIfExists(Path.of(postFileLocation));
         Files.createFile(Path.of(postFileLocation));
         objectMapper.writeValue(new File(postFileLocation), posts);
-
-        return null;
+        return post;
     }
 
     @Override
